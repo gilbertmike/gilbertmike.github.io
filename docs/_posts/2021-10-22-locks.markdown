@@ -18,3 +18,5 @@ This one's simple enough. You check a variable to know if the lock is up for
 grab or not. If it is, feel free to take it. Just make sure the test-and-set
 operation is atomic, hence the name.
 
+https://github.com/gilbertmike/locks/blob/0518121e4295cabc957fa2742ccf427492864c28/src/taslock.cpp#L7-L20
+
