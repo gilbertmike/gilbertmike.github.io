@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Learning about Locks!"
-date:   2021-10-22
+date:   2021-10-22 17:22:00 -0000
 categories: programming
 ---
 
