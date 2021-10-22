@@ -35,4 +35,28 @@ private:
 };
 ```
 
-We can improve this lock by making it into a test-test-and-set lock.
+We can improve this lock by making it into a test-test-and-set lock. Because of
+cache coherence, many cores performing writes to a variable at the same time,
+TAS operations in our case, degrades performance. We can avoid too many TAS
+operations by checking if the variable is set first.
+
+```cpp
+class ttaslock_t {
+public:
+  ttaslock_t() : l(false) {}
+
+  void lock() {
+    while (true) {
+      if (!l.exchange(true))
+        break;
+      while (l.load())
+        ;
+    }
+  }
+
+  void unlock() { l.store(false); }
+
+private:
+  std::atomic<bool> l;
+};
+```
