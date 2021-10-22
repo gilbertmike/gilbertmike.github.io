@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "Learning about Locks!"
+date:   2021-10-22
+categories: programming
+---
+
+I've used locks in my programming for a while now and I sort of understand how
+they're implemented using atomic operations. However, I've never implemented
+one myself. We're going to change that!
+
+I picked up, more like got a digital copy, of Shavit and Herlihy's The Art of
+Multiprocessor Programming. So let's implement some locks.
+
+# Test-and-Set lock
+
+This one's simple enough. You check a variable to know if the lock is up for
+grab or not. If it is, feel free to take it. Just make sure the test-and-set
+operation is atomic, hence the name.
+
