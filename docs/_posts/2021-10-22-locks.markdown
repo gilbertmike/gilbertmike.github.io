@@ -12,7 +12,7 @@ one myself. We're going to change that!
 I picked up, more like got a digital copy, of Shavit and Herlihy's The Art of
 Multiprocessor Programming. So let's implement some locks.
 
-# Test-and-Set lock
+# Test-and-Set and Test-Test-and-Set lock
 
 This one's simple enough. You check a variable to know if the lock is up for
 grab or not. If it is, feel free to take it. Just make sure the test-and-set
@@ -20,3 +20,4 @@ operation is atomic, hence the name.
 
 https://github.com/gilbertmike/locks/blob/0518121e4295cabc957fa2742ccf427492864c28/src/taslock.cpp#L7-L20
 
+We can improve this lock by making it into a test-test-and-set lock.
