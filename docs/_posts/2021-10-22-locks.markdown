@@ -65,7 +65,7 @@ A pretty crude experiment shows our result. The time shown is the number of
 microseconds it took for the threads to acquire the lock a total of 50,000
 times.
 
-![Time vs. threads plot](https://github.com/gilbertmike/gilbertmike.github.io/blob/gh-pages/docs/assets/21/10/25/time.png)
+![Time vs. threads plot](docs/assets/21/10/25/time.png)
 
 Okay, that wasn't too bad. But we still have a lot of activity on the same
 place in memory `l`. We'll try to do better with queue locks in the next post.
