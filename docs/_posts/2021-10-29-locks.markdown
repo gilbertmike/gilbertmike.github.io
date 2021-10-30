@@ -1,0 +1,89 @@
+---
+layout: post
+title:  "Learning about Locks: Part 2"
+date:   2021-10-29 23:08:00 -0000
+categories: programming
+---
+
+Welcome to part two of Learning about Locks! If you haven't seen the first
+part, you can find it [here](https://gilbertmike.github.io/programming/2021/10/22/locks.html).
+
+So I've been reading The Art of Multiprocessor Programming, we'll call it TMP
+for short, some more in my (very little) free time between class and research
+and I learned about queue locks. So let's try and implement them.
+
+# CLH Lock
+
+The lock we're going to attempt is called the CLH lock (due to Craig,
+Hagersten, and Landin). This one is a queue lock and we'll see why in a bit.
+
+In CLH lock, a thread attempting to acquire the lock first puts itself in a
+queue. It then checks if the last owner already released the queue. If yes,
+then the thread acquires the lock.
+
+That makes sense. The implementation then looks something like this.
+
+```cpp
+namespace {
+struct clhnode_t {
+  std::atomic<bool> locked;
+};
+} // namespace
+
+class clhlock_t {
+public:
+  clhlock_t() {
+    auto head_node = new clhnode_t;
+    head_node->locked.store(false);
+
+    head.store(head_node);
+    owner = head_node;
+  }
+
+  void lock() {
+    auto my_node = new clhnode_t;
+    my_node->locked.store(true);
+    auto my_pred = head.exchange(my_node);
+
+    while (my_pred->locked.load()) {
+      std::this_thread::yield();
+    }
+
+    assert(owner == my_pred);
+    owner = my_node;
+    delete my_pred;
+  }
+
+  void unlock() { owner->locked.store(false); }
+
+private:
+  std::atomic<clhnode_t *> head;
+  char padding[CACHE_LINE_SIZE]; // avoid false sharing of head and owner
+  clhnode_t *owner;
+};
+```
+
+The code above is almost a direct translation of the Java code in TMP with two
+main differences.
+
+The first is that we are not storing `my_node` in a thread-local storage like
+in TMP. This is because we only need to keep the pointer `my_node` as long as
+a thread is between `lock()` and `unlock()`. Because only one thread can be in
+the critical section, that's why we're making the lock after all, we can just
+store it in a local variable. This is evident in the code above.
+
+The second difference is the line `std::this_thread::yield()`. I didn't have
+that line when I first wrote this code. However, the performance was abysmal.
+I figured that we might be spinning a bit too much with high number of threads.
+So I added `std::this_thread::yield` to throttle the waiting thread and let
+others run. While I'm at it, I added that to the TAS and TTAS lock we made in
+the first post too. It improved performance quite a bit.
+
+Here's the graph:
+![Time vs. threads plot]({{ site.baseurl }}/docs/assets/21/10/29/time.png)
+
+TAS and TTAS graph from previous post:
+![Time vs. threads plot]({{ site.baseurl }}/docs/assets/21/20/25/time.png)
+
+That's all I have for now. Thanks for reading!
+
