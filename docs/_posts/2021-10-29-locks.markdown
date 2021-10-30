@@ -80,10 +80,10 @@ others run. While I'm at it, I added that to the TAS and TTAS lock we made in
 the first post too. It improved performance quite a bit.
 
 Here's the graph:
-![Time vs. threads plot]({{ site.baseurl }}/docs/assets/21/10/29/time.png)
+![Time vs. threads plot]({{ site.baseurl }}/assets/21/10/29/time.png)
 
 TAS and TTAS graph from previous post:
-![Time vs. threads plot]({{ site.baseurl }}/docs/assets/21/20/25/time.png)
+![Time vs. threads plot]({{ site.baseurl }}/assets/21/20/25/time.png)
 
 That's all I have for now. Thanks for reading!
 
