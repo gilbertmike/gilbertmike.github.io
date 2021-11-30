@@ -32,7 +32,7 @@ benches under bench/.
 
 My design process always starts with the interface. I knew I wanted to try
 implementing a bitonic network, so I started with that.
-```SystemVerilog
+```systemverilog
 module bitonic4(input wire clk, 
                 input wire[31:0] din[0:WIDTH-1],
                 output logic[31:0] dout[0:WIDTH-1]);
