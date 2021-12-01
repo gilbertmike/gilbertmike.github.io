@@ -109,6 +109,6 @@ The design has another module `sorter` that uses `bitonic4`. The steps are
 basically the same.
 
 And finally, the waveform we've been waiting for.
-![Waveform of sorter](https://github.com/gilbertmike/sorting-machine/blob/main/sorter.png)
+![Waveform of sorter](https://raw.githubusercontent.com/gilbertmike/sorting-machine/main/sorter.png)
 
 That's it from me. Thanks for reading!
