@@ -71,3 +71,44 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 ```
+
+I'm not going to get into the implementation details of the bitonic network
+here, but you can find it in the [repo](https://github.com/gilbertmike/sorting-machine).
+The implementation is just Verilog translation of a diagram from [Wikipedia](https://en.wikipedia.org/wiki/Bitonic_sorter).
+
+Now comes our first interaction with Verilator. The first step is to generate
+the C++ files. We call Verilator:
+```
+verilator -Wall --trace --cc rtl/bitonic.sv --exe bench/bitonic_tb.cpp --top-module bitonic4
+```
+The `--trace` means we will be generating traces to view with GTKWave later.
+The `--top-module` specifies the top level module in our design. The `-Wall`
+flag enables all warnings. The `--cc` flag says that we want C++ generated
+instead of SystemC.
+
+This will create a directory obj_dir/ which contains the generated files.
+Verilator will also generate a Makefile Vbitonic.mk in obj_dir/. We can now
+build the simulation binary.
+```
+make -C obj_dir -f Vbitonic.mk Vbitonic
+```
+A binary obj_dir/Vbitonic is generated. We can run this binary to get a trace
+we can view with GTKWave.
+
+Since we will be calling this often (I didn't get my code right the first time,
+of course), I put the two commands in a Makefile.
+```
+bitonic:
+    verilator -Wall --trace --cc rtl/bitonic.sv --exe bench/bitonic_tb.cpp --top-module bitonic4
+    ${MAKE} -C obj_dir -f Vbitonic.mk Vbitonic
+```
+
+And that's it! 
+
+The design has another module `sorter` that uses `bitonic4`. The steps are
+basically the same.
+
+And finally, the waveform we've been waiting for.
+![Waveform of sorter](https://github.com/gilbertmike/sorting-machine/blob/main/sorter.png)
+
+That's it from me. Thanks for reading!
