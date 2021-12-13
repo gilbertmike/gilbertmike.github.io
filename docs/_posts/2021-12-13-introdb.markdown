@@ -1,0 +1,24 @@
+---
+layout: post
+title:  "(WIP) Writing a Database from Scratch: Pt. 1"
+date:   2021-12-13 00:06:00 -0000
+categories: programming
+----
+
+For this post, I'm going to write about my project writing a database,
+I'm calling it introdb for now, from scratch. Like my other posts, this side
+project is for learning purpose, so I'm limiting the scope quite a bit.
+Before I start, I'm taking my hats off to Conrad Stack. It was his [post](https://cstack.github.io/db_tutorial/)
+that inspired me to do my own take.
+
+I want to start introdb very simply: an in-memory append-only database with
+a fixed schema shown below.
+
+| Column  | Type         |
+|---------|--------------|
+| id      | int          |
+| item    | varchar(32)  |
+| desc    | varchar(256) |
+
+(Work in progress)
+
