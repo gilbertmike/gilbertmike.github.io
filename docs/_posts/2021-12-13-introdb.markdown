@@ -20,5 +20,87 @@ a fixed schema shown below.
 | item    | varchar(32)  |
 | desc    | varchar(256) |
 
-(Work in progress)
+The fixed schema makes it simple for me to write a very simple interface.
+
+```cpp
+// include/table.hpp
+
+template <size_t N>
+using Varchar = std::array<char, N>;
+
+using Item = Varchar<32>;
+using Desc = Varchar<256>;
+
+struct Row {
+  int id;
+  Item item;
+  Desc desc;
+
+  Row(int row_id, const std::string& row_item, const std::string& row_desc);
+};
+
+struct RowView {
+  int id;
+  const Item& item;
+  const Desc& desc;
+
+  RowView(const Row& row);
+};
+
+class Table {
+ public:
+  Table();
+
+  // Observer
+  std::vector<RowView> Select();
+
+  // Modifier
+  void Append(const std::string& item, const std::string& desc);
+
+  // Deleted methods
+  Table(const Table&) = delete;
+
+  Table& operator=(const Table&) = delete;
+
+ private:
+  std::vector<Row> rows;
+};
+```
+
+The implementation is also straightforward.
+
+```cpp
+// src/table.cpp
+
+#include "table.hpp"
+
+Row::Row(int row_id, const std::string& row_item, const std::string& row_desc)
+    : id(row_id) {
+  std::copy(row_item.begin(), row_item.end(), item.begin());
+  std::copy(row_desc.begin(), row_desc.end(), desc.begin());
+}
+
+RowView::RowView(const Row& row) : id(row.id), item(row.item), desc(row.desc) {}
+
+Table::Table() {}
+
+std::vector<RowView> Table::Select() {
+  std::vector<RowView> row_views;
+  row_views.reserve(rows.size());
+  for (const auto& row : rows) {
+    row_views.emplace_back(row);
+  }
+  return row_views;
+}
+
+void Table::Append(const std::string& item, const std::string& desc) {
+  rows.emplace_back(rows.size(), item, desc);
+}
+```
+
+Tests show the methods work as expected and there we have it: an in-memory
+append-only database, basically a glorified vector. Next step: writing to
+disk to make the database persistent.
+
+Thanks for reading!
 
