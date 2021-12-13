@@ -3,7 +3,7 @@ layout: post
 title:  "(WIP) Writing a Database from Scratch: Pt. 1"
 date:   2021-12-13 00:06:00 -0000
 categories: programming
-----
+---
 
 For this post, I'm going to write about my project writing a database,
 I'm calling it introdb for now, from scratch. Like my other posts, this side
